@@ -1,0 +1,98 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+dados = pd.read_csv(
+    "dados.txt",
+    sep="\t",          # separador entre colunas
+    decimal=",",       # vírgula decimal
+    header=None,
+    names=["X1", "X2", "label"]
+)
+
+plt.figure(figsize=(10, 8))
+
+cores = {
+    1: "blue",
+    2: "red",
+    3: "green",
+    4: "orange"
+}
+
+for classe in sorted(dados["label"].unique()):
+
+    subset = dados[dados["label"] == classe]
+
+    plt.scatter(
+        subset["X1"],
+        subset["X2"],
+        label=f"Classe {classe}",
+        alpha=0.7
+    )
+
+plt.xlabel("X1")
+plt.ylabel("X2")
+plt.title("Distribuição dos dados")
+
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+
+plt.savefig(
+    "distribuicao_dados.png",
+    dpi=300
+)
+
+plt.show()
+
+fig, ax = plt.subplots(2, 2, figsize=(12,8))
+
+for classe in sorted(dados["label"].unique()):
+
+    subset = dados[dados["label"] == classe]
+
+    ax[0,0].hist(
+        subset["X1"],
+        bins=15,
+        alpha=0.5,
+        label=f"Classe {classe}"
+    )
+
+    ax[0,1].hist(
+        subset["X2"],
+        bins=15,
+        alpha=0.5,
+        label=f"Classe {classe}"
+    )
+
+ax[0,0].set_title("X1 por classe")
+ax[0,1].set_title("X2 por classe")
+
+ax[0,0].legend()
+ax[0,1].legend()
+
+plt.tight_layout()
+plt.show()
+
+fig, ax = plt.subplots(1, 2, figsize=(12,6))
+
+dados.boxplot(
+    column="X1",
+    by="label",
+    ax=ax[0]
+)
+
+dados.boxplot(
+    column="X2",
+    by="label",
+    ax=ax[1]
+)
+
+ax[0].set_title("X1")
+ax[1].set_title("X2")
+
+plt.suptitle("Distribuição dos Atributos por Classe")
+
+plt.tight_layout()
+plt.show()
