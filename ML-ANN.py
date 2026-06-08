@@ -8,10 +8,11 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
+from tensorflow.keras.optimizers import Adam
 
 
 dados = pd.read_csv(
-    "dados.txt",
+    "dados_15.txt",
     sep="\t",          # separador entre colunas
     decimal=",",       # vírgula decimal
     header=None,
@@ -81,7 +82,7 @@ model.add(layers.Dense(units=16, activation='relu', input_shape=(2,)))
 # - units=16: 16 neurônios na camada oculta
 # - input_shape=(2,): indicamos que a entrada tem 2 atributos (X1 e X2)
 
-model.add(layers.Dense(units=4, activation='softmax'))
+model.add(layers.Dense(units=15, activation='softmax'))
 # -> Camada de Saída
 # - units=4: 4 neurônios, um para cada classe (Classe 1, 2, 3 e 4)
 # - activation='softmax': converte a saída em um vetor de probabilidades (soma = 100%)
@@ -92,8 +93,11 @@ model.summary()
 
 print("\n--- Etapa 7: Treinamento ---")
 
+TAXA_APRENDIZADO = 0.003
+otimizador_adam = Adam(learning_rate=TAXA_APRENDIZADO)
+
 model.compile(
-    optimizer='adam',
+    optimizer=otimizador_adam,
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy']
 )
@@ -155,7 +159,8 @@ y_pred = np.argmax(y_pred_probabilidades, axis=1)
 
 
 # RELATÓRIO:
-nomes_classes = ["Classe 1", "Classe 2", "Classe 3", "Classe 4"]
+# nomes_classes = ["Classe 1", "Classe 2", "Classe 3", "Classe 4"]
+nomes_classes = ["Classe 1", "Classe 2", "Classe 3", "Classe 4","Classe 5", "Classe 6","Classe 7", "Classe 8", "Classe 9", "Classe 10", "Classe 11", "Classe 12", "Classe 13", "Classe 14", "Classe 15"]
 print("\nRelatório de Classificação:")
 relatorio = classification_report(y_test, y_pred, target_names=nomes_classes)
 print(relatorio)

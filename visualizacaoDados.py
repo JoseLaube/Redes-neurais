@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 os.makedirs("imagens", exist_ok=True)
 
 dados = pd.read_csv(
-    "dados.txt",
+    "dados_15.txt",
     sep="\t",          # separador entre colunas
     decimal=",",       # vírgula decimal
     header=None,
@@ -16,16 +16,14 @@ dados = pd.read_csv(
 
 
 # Gráfico de dispersão
-plt.figure(figsize=(10, 8))
+plt.figure(figsize=(12, 8))
 
-cores = {
-    1: "blue",
-    2: "red",
-    3: "green",
-    4: "orange"
-}
+classes_unicas = sorted(dados["label"].unique())
 
-for classe in sorted(dados["label"].unique()):
+cmap = plt.get_cmap('tab20')
+cores_dinamicas = [cmap(i) for i in np.linspace(0, 1, len(classes_unicas))]
+
+for i, classe in enumerate(classes_unicas):
 
     subset = dados[dados["label"] == classe]
 
@@ -33,13 +31,14 @@ for classe in sorted(dados["label"].unique()):
         subset["X1"],
         subset["X2"],
         label=f"Classe {classe}",
+        color=cores_dinamicas[i],
         alpha=0.7
     )
 
 plt.xlabel("X1")
 plt.ylabel("X2")
 plt.title("Distribuição dos dados")
-plt.legend()
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.grid(True)
 plt.tight_layout()
 
