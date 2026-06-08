@@ -1,6 +1,9 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+os.makedirs("imagens", exist_ok=True)
 
 dados = pd.read_csv(
     "dados.txt",
@@ -10,6 +13,9 @@ dados = pd.read_csv(
     names=["X1", "X2", "label"]
 )
 
+
+
+# Gráfico de dispersão
 plt.figure(figsize=(10, 8))
 
 cores = {
@@ -33,48 +39,48 @@ for classe in sorted(dados["label"].unique()):
 plt.xlabel("X1")
 plt.ylabel("X2")
 plt.title("Distribuição dos dados")
-
 plt.legend()
 plt.grid(True)
-
 plt.tight_layout()
 
-plt.savefig(
-    "distribuicao_dados.png",
-    dpi=300
-)
-
+plt.savefig("imagens/distribuicao_dados.png", dpi=300)
 plt.show()
 
-fig, ax = plt.subplots(2, 2, figsize=(12,8))
+
+
+# Histogramas
+fig, ax = plt.subplots(1, 2, figsize=(12,8))
 
 for classe in sorted(dados["label"].unique()):
 
     subset = dados[dados["label"] == classe]
 
-    ax[0,0].hist(
+    ax[0].hist(
         subset["X1"],
         bins=15,
         alpha=0.5,
         label=f"Classe {classe}"
     )
 
-    ax[0,1].hist(
+    ax[1].hist(
         subset["X2"],
         bins=15,
         alpha=0.5,
         label=f"Classe {classe}"
     )
 
-ax[0,0].set_title("X1 por classe")
-ax[0,1].set_title("X2 por classe")
-
-ax[0,0].legend()
-ax[0,1].legend()
+ax[0].set_title("X1 por classe")
+ax[1].set_title("X2 por classe")
+ax[0].legend()
+ax[1].legend()
 
 plt.tight_layout()
+plt.savefig("imagens/histogramas_dados.png", dpi=300)
 plt.show()
 
+
+
+# Boxplots
 fig, ax = plt.subplots(1, 2, figsize=(12,6))
 
 dados.boxplot(
@@ -93,6 +99,12 @@ ax[0].set_title("X1")
 ax[1].set_title("X2")
 
 plt.suptitle("Distribuição dos Atributos por Classe")
-
 plt.tight_layout()
+plt.savefig("imagens/boxplots_dados.png", dpi=300)
 plt.show()
+
+
+
+# Verificação de dados duplicados
+duplicados = dados.duplicated()
+print("Duplicados:", duplicados.sum())
